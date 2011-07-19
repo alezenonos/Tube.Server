@@ -1,0 +1,8 @@
+application: tubeserver
+version: 0-test
+runtime: python
+api_version: 1
+
+handlers:
+- url: /.*
+  script: testing_one_two_three.py
