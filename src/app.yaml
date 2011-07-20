@@ -4,5 +4,23 @@ runtime: python
 api_version: 1
 
 handlers:
-- url: /.*
+- url: /check-in/*
+  script: web_interface/print_check_in.py
+
+- url: /users/*
+  script: web_interface/print_users.py
+  
+- url: /users/.*
   script: testing_one_two_three.py
+  
+- url: /reports/*
+  script: web_interface/print_reports.py
+  
+- url: /reports/.*
+  script: testing_part_two.py
+  
+- url: /.*
+  script: home.py
+  
+builtins:
+- datastore_admin: on
