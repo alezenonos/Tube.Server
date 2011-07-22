@@ -16,10 +16,6 @@ class main_page(webapp.RequestHandler):
         logging.info("start of get")
         entry_query = check_in_db.all().ancestor(check_in_db_key('check_in_database'))
         entries = entry_query.fetch(100)
-        logging.info('entries here')
-        logging.info(entries)
-        for entry in entries:
-            logging.info(entry.destination)
         template_values = {
             'entries': entries,
             'datastore' : datastore,
@@ -29,7 +25,7 @@ class main_page(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'print_check_in_layout.html')
         self.response.out.write(template.render(path, template_values))
         
-#        check_in_db(parent=check_in_db_key('check_in_database'),origin=1,destination=2,time_sent=datetime.now(),rating_delay=db.Rating(50),rating_crowded=db.Rating(25)).put()
+#        check_in_db(parent=check_in_db_key('check_in_database'),origin=1,destination=2,line=8,time_sent=datetime.now(),rating_delay=db.Rating(15),rating_crowded=db.Rating(25)).put()
 
 application = webapp.WSGIApplication([('/check-in', main_page)], debug=True)
 

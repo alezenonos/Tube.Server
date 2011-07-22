@@ -5,6 +5,7 @@ class check_in_db(db.Model):
     user = db.ReferenceProperty()
     origin = db.IntegerProperty(required=True)
     destination = db.IntegerProperty(required=True)
+    line = db.IntegerProperty()
     time_sent = db.DateTimeProperty(required=True)
     time_received = db.DateTimeProperty(required=True, auto_now_add=True)
     rating_delay = db.RatingProperty(required=True)

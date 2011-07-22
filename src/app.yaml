@@ -22,6 +22,9 @@ handlers:
 - url: /get/fares/*
   script: json_downloaders/fares.py
   
+- url: /get/tube-lines-status/*
+  script: json_downloaders/tube_lines_status.py
+  
 - url: /.*
   script: home.py
   

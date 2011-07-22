@@ -12,6 +12,8 @@ url_u = '/users'
 url_u_lt = 'Users'
 url_f = '/get/fares'
 fares_linktext = 'Fares'
+url_ave = '/get/tube-lines-status'
+ave_linktext = 'Tube lines status averages'
     
 class main_page(webapp.RequestHandler):
     def get(self):
@@ -23,7 +25,9 @@ class main_page(webapp.RequestHandler):
             'url_users' : url_u,
             'url_users_linktext' : url_u_lt,
             'url_fares' : url_f,
-            'fares_linktext' : fares_linktext
+            'fares_linktext' : fares_linktext,
+            'url_ave' : url_ave,
+            'ave_linktext' : ave_linktext
         }
         path = os.path.join(os.path.dirname(__file__), 'home.html')
         self.response.out.write(template.render(path, template_values))
