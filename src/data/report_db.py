@@ -4,7 +4,7 @@ class report_db(db.Model):
     user = db.ReferenceProperty()
     time_sent = db.DateTimeProperty(required=True)
     time_received = db.DateTimeProperty(required=True, auto_now_add=True)
-    category = db.LinkProperty(float)
+    category = db.ListProperty(float)
     comment = db.TextProperty(required=False)
     
 #class report_db_test(db.Model):
@@ -12,4 +12,4 @@ class report_db(db.Model):
 #    report = db.TextProperty(required=True)
     
 def report_db_key(report_db_name=None):
-    return db.Key.from_path('report_db', report_db_name or 'report_db_database')
+    return db.Key.from_path('report_db', report_db_name or 'report_database')

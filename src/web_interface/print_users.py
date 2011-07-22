@@ -11,6 +11,8 @@ datastore = 'users'
 
 class main_page(webapp.RequestHandler):
     def get(self):
+#        user_db(parent=user_db_key('user_database'), given_name='joe', surname='Bloggs').put()
+        
         logging.info("start of get")
         entry_query = user_db.all().ancestor(user_db_key('user_database'))
         entries = entry_query.fetch(100)
@@ -22,6 +24,7 @@ class main_page(webapp.RequestHandler):
         }
         path = os.path.join(os.path.dirname(__file__), 'print_users_layout.html')
         self.response.out.write(template.render(path, template_values))
+        
 
 application = webapp.WSGIApplication([('/users', main_page)], debug=True)
 

@@ -19,6 +19,9 @@ handlers:
 - url: /reports/.*
   script: testing_part_two.py
   
+- url: /get/fares/*
+  script: json_downloaders/fares.py
+  
 - url: /.*
   script: home.py
   

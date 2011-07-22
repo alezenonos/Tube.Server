@@ -10,6 +10,8 @@ url_r = '/reports'
 url_r_lt = 'Reports'
 url_u = '/users'
 url_u_lt = 'Users'
+url_f = '/get/fares'
+fares_linktext = 'Fares'
     
 class main_page(webapp.RequestHandler):
     def get(self):
@@ -19,7 +21,9 @@ class main_page(webapp.RequestHandler):
             'url_report' : url_r,
             'url_report_linktext' : url_r_lt,
             'url_users' : url_u,
-            'url_users_linktext' : url_u_lt
+            'url_users_linktext' : url_u_lt,
+            'url_fares' : url_f,
+            'fares_linktext' : fares_linktext
         }
         path = os.path.join(os.path.dirname(__file__), 'home.html')
         self.response.out.write(template.render(path, template_values))

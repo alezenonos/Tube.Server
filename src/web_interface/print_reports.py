@@ -2,6 +2,7 @@ from data.report_db import report_db_key, report_db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
+from datetime import datetime
 import logging
 import os
 
@@ -11,8 +12,10 @@ datastore = 'reports'
 
 class main_page(webapp.RequestHandler):
     def get(self):
+#        report_db(parent=report_db_key('report_database'), time_sent=datetime.now(), comment='much too hot down here~').put()
+        
         logging.info("start of get")
-        entry_query = report_db.all().ancestor(report_db_key('report_db_database'))
+        entry_query = report_db.all().ancestor(report_db_key('report_database'))
         entries = entry_query.fetch(100)
         template_values = {
             'entries': entries,
