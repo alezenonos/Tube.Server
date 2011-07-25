@@ -1,18 +1,18 @@
 
 tube_lines = [
-	"Waterloo and City Line",
-	"Metropolitan Line",
-	"Docklands Light Railway",
 	"Bakerloo Line",
-	"Circle Line",
-	"Overground",
-	"Northern Line",
-	"Hammersmith and City Line",
-	"Jubilee Line",
-	"Victoria Line",
-	"District Line",
 	"Central Line",
-	"Piccadilly Line"
+	"Circle Line",
+	"District Line",
+	"Hammersmith and City Line",
+	"Metropolitan Line",
+	"Jubilee Line",
+	"Northern Line",
+	"Piccadilly Line",
+	"Victoria Line",
+	"Waterloo and City Line",
+	"Overground",
+	"Docklands Light Railway"
 ]
 
 victoria_line = [
@@ -959,3 +959,30 @@ zone9_stations = [
 	"Amersham"
 	"Chesham"
 ]
+
+tube_line_arrays = [
+				bakerloo_line,
+				central_line,
+				circle_line,
+				district_line,
+				hammersmith_and_city_line,
+				jubilee_line,
+				metropolitan_line,
+				northern_line,
+				piccadilly_line,
+				victoria_line,
+				waterloo_and_city_line,
+				overground_line,
+				dlr_line
+				]
+
+zone_arrays = [
+			zone1_stations,
+			zone2_stations,
+			zone3_stations,
+			zone4_stations,
+			zone5_stations,
+			zone6_stations,
+			zone8_stations,
+			zone9_stations
+			]

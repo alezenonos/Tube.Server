@@ -5,10 +5,17 @@
 	</head>
 	<body>
 		{% for entry in entries %}
-			<p>Origin: <i>{{ entry.origin }}</i> - Destination: <i> {{ entry.destination }} </i></p>
-			<p> - Time sent: <i>{{ entry.time_sent }}</i> - Time received: <i>{{ entry.time_received }}</i></p>
-			<p> - Delay Rating: <i>{{ entry.rating_delay }}</i> - Crowded Rating: <i>{{ entry.rating_crowded }}</i></p>
+			<p> - Origin: <i>{{ entry.origin }}</i> </p>
+			<p> - Destination: <i> {{ entry.destination }} </i></p>
+			<p> - Time sent: <i>{{ entry.time_sent }}</i> </p>
+			<p> - Time received: <i>{{ entry.time_received }}</i></p>
+			<p> - Longitude: <i>{{ entry.longitude }}</i> </p>
+			<p> - Latitude: <i>{{ entry.latitude }}</i></p>
+			<p> - Delay Rating: <i>{{ entry.rating_delay }}</i> </p>
+			<p> - Crowded Rating: <i>{{ entry.rating_crowded }}</i></p>
 			<p> - Sunshine and Bunnies Rating: <i>{{ entry.rating_happiness }}</i> </p>
+			<p> - Concerned lines: <i>{{ entry.line }}</i></p>
+			<hr>
 		{% endfor %}
 	</body>
 </html>
