@@ -25,6 +25,9 @@ handlers:
 - url: /get/tube-lines-status/*
   script: json_downloaders/tube_lines_status.py
   
+- url: /posted/here.*
+  script: test_uploader/testing.py
+  
 - url: /.*
   script: home.py
   

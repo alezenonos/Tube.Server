@@ -2,14 +2,15 @@ from google.appengine.ext import db
 
 # database entity for check-ins
 class check_in_db(db.Model):
-    user = db.ReferenceProperty()
-    origin = db.IntegerProperty(required=True)
-    destination = db.IntegerProperty(required=True)
-    line = db.IntegerProperty()
-    time_sent = db.DateTimeProperty(required=True)
+    user = db.StringProperty()
+    origin = db.StringProperty(required=True)
+    destination = db.StringProperty(required=True)
+    line = db.StringProperty()
+    time_sent = db.StringProperty(required=True)
     time_received = db.DateTimeProperty(required=True, auto_now_add=True)
-    rating_delay = db.RatingProperty(required=True)
-    rating_crowded = db.RatingProperty(required=True)
+    rating_delay = db.StringProperty(required=True)
+    rating_crowded = db.StringProperty(required=True)
+    rating_happiness = db.StringProperty(required=True)
     comment = db.TextProperty(required=False)
     
 # database entity for temporarty test of check-ins (to be removed)
