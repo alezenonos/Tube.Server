@@ -5,7 +5,6 @@ from data.strings import tube_line_arrays
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from datetime import datetime
-import logging
 
 class Downloader(webapp.RequestHandler):
     def get(self):
@@ -20,14 +19,13 @@ class Downloader(webapp.RequestHandler):
         longi=self.request.GET.get('long')
         lat=self.request.GET.get('lat')
         c=self.request.GET.get('comment')
+#        /posted/here?&user=adam&origin=Euston&destination=Liverpool Street&time=2011-07-12 12:30:00&delay=300&crowd=100&happy=500&lat=34&long=-5
 
         l = self.find_line(o) + self.find_line(d)
-        logging.info(l)
         
         database=check_in_db_key('check_in_database')
         check_in = check_in_db(parent=database, user=u, origin=o, destination=d, line=l, time_sent=t, rating_delay=rd, rating_crowded=rc, rating_happiness=rh, longitude=longi, latitude=lat, comment=c)
         check_in.put()
-        logging.info("All data are extracted from the url")
         
     def find_line(self, queried):
         "Called to find on which line the stations fall"
@@ -35,7 +33,6 @@ class Downloader(webapp.RequestHandler):
         for line_id in range(len(tube_line_arrays)):
             for station in tube_line_arrays[line_id]:
                 if station==queried:
-                    logging.info(tube_lines[line_id])
                     returned.append(tube_lines[line_id])
         return returned
 

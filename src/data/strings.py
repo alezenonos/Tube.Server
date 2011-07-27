@@ -1,18 +1,18 @@
 
 tube_lines = [
-	"Bakerloo Line",
-	"Central Line",
-	"Circle Line",
-	"District Line",
-	"Hammersmith and City Line",
-	"Metropolitan Line",
-	"Jubilee Line",
-	"Northern Line",
-	"Piccadilly Line",
-	"Victoria Line",
 	"Waterloo and City Line",
+	"Metropolitan Line",
+	"Docklands Light Railway",
+	"Bakerloo Line",
+	"Circle Line",
 	"Overground",
-	"Docklands Light Railway"
+	"Northern Line",
+	"Hammersmith and City Line",
+	"Jubilee Line",
+	"Victoria Line",
+	"District Line",
+	"Central Line",
+	"Piccadilly Line"
 ]
 
 victoria_line = [
@@ -972,17 +972,6 @@ tube_line_arrays = [
 				piccadilly_line,
 				victoria_line,
 				waterloo_and_city_line,
-				overground_line,
-				dlr_line
+				dlr_line,
+				overground_line
 				]
-
-zone_arrays = [
-			zone1_stations,
-			zone2_stations,
-			zone3_stations,
-			zone4_stations,
-			zone5_stations,
-			zone6_stations,
-			zone8_stations,
-			zone9_stations
-			]

@@ -1,4 +1,4 @@
-application: tuberater
+application: testingtubeserver
 version: 0-test
 runtime: python
 api_version: 1
@@ -22,8 +22,15 @@ handlers:
 - url: /posted/here.*
   script: test_uploader/testing.py
   
+- url: /posted/there/*
+  script: test_uploader/receive_check_ins.py
+  
 - url: /.*
   script: home.py
   
 builtins:
 - datastore_admin: on
+- remote_api: on
+
+inbound_services:
+- channel_presence

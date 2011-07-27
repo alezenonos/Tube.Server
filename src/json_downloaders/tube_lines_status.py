@@ -7,6 +7,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 class main_page(webapp.RequestHandler):
     def get(self):
+        self.response.headers['Content-Type'] = "application/json"
         printable_status = dict.fromkeys(tube_lines)
         for index in range(len(tube_lines)):
             gotten_average = self.get_average(index)
@@ -15,7 +16,7 @@ class main_page(webapp.RequestHandler):
             else:
                 printable_status[tube_lines[index]] = gotten_average
         
-        print json.dumps(printable_status, sort_keys=True, indent=4 )
+        self.response.out.write(json.dumps(printable_status, sort_keys=True, indent=4 ))
     
     def get_average(self, line):
         "Returns entries from the database, depending on the given line"
