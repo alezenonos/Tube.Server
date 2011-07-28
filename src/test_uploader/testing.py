@@ -4,7 +4,6 @@ from data.strings import tube_lines
 from data.strings import tube_line_arrays
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from datetime import datetime
 
 class Downloader(webapp.RequestHandler):
     def get(self):
@@ -19,7 +18,7 @@ class Downloader(webapp.RequestHandler):
         longi=self.request.GET.get('long')
         lat=self.request.GET.get('lat')
         c=self.request.GET.get('comment')
-#        /posted/here?&user=adam&origin=Euston&destination=Liverpool Street&time=2011-07-12 12:30:00&delay=300&crowd=100&happy=500&lat=34&long=-5
+#        /posted/here?&user=adam&origin=Euston&destination=Liverpool Street&time=2011-07-27 15:40:00&delay=300&crowd=100&happy=500&lat=34&long=-5
 
         l = self.find_line(o) + self.find_line(d)
         

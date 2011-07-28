@@ -15,3 +15,8 @@ indexes:
   properties:
   - name: line
   - name: time_sent
+
+- kind: check_in_db
+  ancestor: yes
+  properties:
+  - name: time_sent
