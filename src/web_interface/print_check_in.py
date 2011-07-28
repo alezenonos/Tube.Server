@@ -14,7 +14,7 @@ datastore = 'check-ins'
 class main_page(webapp.RequestHandler):
     def get(self):
         logging.info("start of get")
-        entry_query = check_in_db.all().ancestor(check_in_db_key('check_in_database'))
+        entry_query = check_in_db.all().ancestor(check_in_db_key('check_in_database')).order("-time_sent")
         entries = entry_query.fetch(100)
         template_values = {
             'entries': entries,

@@ -44,8 +44,11 @@ class main_page(webapp.RequestHandler):
         logging.info(len(entries))
         
         if (len(entries) == 0):
-            logging.info('returning -1')
-            return -1
+            if (threehours == 0):
+                return self.get_average(line, 1)
+            else:
+                logging.info('returning -1')
+                return -1
         else:
             if (len(entries) < 10):
                 if (threehours == 0):

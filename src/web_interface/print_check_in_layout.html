@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		{% for entry in entries %}
+			<p> - User: <i>{{ entry.user }}</i></p>
 			<p> - Origin: <i>{{ entry.origin }}</i> </p>
 			<p> - Destination: <i> {{ entry.destination }} </i></p>
 			<p> - Time sent: <i>{{ entry.time_sent }}</i> </p>

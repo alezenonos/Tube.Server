@@ -20,3 +20,9 @@ indexes:
   ancestor: yes
   properties:
   - name: time_sent
+
+- kind: check_in_db
+  ancestor: yes
+  properties:
+  - name: time_sent
+    direction: desc

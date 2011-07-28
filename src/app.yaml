@@ -22,8 +22,8 @@ handlers:
 - url: /posted/here.*
   script: test_uploader/testing.py
   
-- url: /posted/there/*
-  script: test_uploader/receive_check_ins.py
+- url: /upload/post/*
+  script: test_uploader/receive_communique.py
   
 - url: /.*
   script: home.py
