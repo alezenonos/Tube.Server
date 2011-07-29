@@ -5,7 +5,14 @@
 	</head>
 	<body>
 		{% for entry in entries %}
-			<p>Given Name: <i>{{ entry.given_name }}</i> - Surname: <i> {{ entry.surname }} </i></p>
+			<p> - Unique ID: <i>{{ entry.unique_id }}</i> </p>
+			<p> - Given Name: <i>{{ entry.given_name }}</i> </p>
+			<p> - Surname: <i> {{ entry.surname }} </i></p>
+			<p> - Gender: <i> {{ entry.gender }} </i></p>
+			<p> - email: <i> {{ entry.email }} </i></p>
+			<p> - Twitter username: <i> {{ entry.twitter_id }} </i></p>
+			<p> - Facebook ID: <i> {{ entry.facebook_id }} </i></p>
+			<hr>
 		{% endfor %}
 	</body>
 </html>

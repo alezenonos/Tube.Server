@@ -26,3 +26,9 @@ indexes:
   properties:
   - name: time_sent
     direction: desc
+
+- kind: report_db
+  ancestor: yes
+  properties:
+  - name: time_sent
+    direction: desc

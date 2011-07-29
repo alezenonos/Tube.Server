@@ -5,7 +5,14 @@
 	</head>
 	<body>
 		{% for entry in entries %}
-			<p> Time Sent: <i> {{ entry.time_sent }} </p> - Time Received: <i> {{ entry.time_received }} </i></p>
+			<p> - User: <i>{{ entry.user }}</i></p>
+			<p> - Time Sent: <i>{{ entry.time_sent }}</i></p>
+			<p> - Time Received: <i>{{ entry.time_received }}</i></p>
+			<p> - Line: <i>{{ entry.line }}</i></p>
+			<p> - Stations: <i>{{ entry.stations }}</i></p>
+			<p> - Category/Categories: <i>{{ entry.category }}</i></p>
+			<p> - Comment: <i>{{ entry.comment }}</i></p>
+			<hr>
 		{% endfor %}
 	</body>
 </html>
