@@ -7,11 +7,11 @@ def add_to_reports_db(self, user_id, report):
     logging.info('adding_to_reports_db')
     
     u = user_id
-    ts = datetime.strptime(report['time_stamp'], '%Y-%m-%d %H:%M:%S')
-    l = report['line']
-    s = report['stations']
-    cat = report['categories']
-    com = report['comment']
+    ts = datetime.strptime(report.get('time_stamp'), '%Y-%m-%d %H:%M:%S')
+    l = report.get('line')
+    s = report.get('stations')
+    cat = report.get('categories')
+    com = report.get('comment')
     
     key = report_db_key('report_database')
     entry = report_db(

@@ -1,4 +1,5 @@
 from data.check_in_db import check_in_db_key, check_in_db
+from data.user_db import user_db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -11,6 +12,13 @@ url_back_home = '/'
 url_text = 'Home'
 datastore = 'check-ins'
 
+#def get_understandable_users(self, entries):
+#    "gets more readable identifiers for printing"
+#    returned_list = dict()
+#    for entry in entries:
+#        returned_list[entry.user] = user_db.get([entry.user]).twitter_id
+#    return entries
+
 class main_page(webapp.RequestHandler):
     def get(self):
         logging.info("start of get")
@@ -18,6 +26,7 @@ class main_page(webapp.RequestHandler):
         entries = entry_query.fetch(100)
         template_values = {
             'entries': entries,
+#            'users' : get_understandable_users(self, entries),
             'datastore' : datastore,
             'url_home' : url_back_home,
             'url_linktext' : url_text

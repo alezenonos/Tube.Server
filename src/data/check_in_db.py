@@ -3,7 +3,7 @@ from google.appengine.ext import db
 # database entity for check-ins
 class check_in_db(db.Model):
 #    user needs to be a ref. to the other database
-    user = db.StringProperty()
+    user = db.ReferenceProperty(required=True)
     origin = db.StringProperty(required=True)
     destination = db.StringProperty(required=True)
     line = db.StringListProperty()

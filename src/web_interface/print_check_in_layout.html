@@ -5,7 +5,8 @@
 	</head>
 	<body>
 		{% for entry in entries %}
-			<p> - User: <i>{{ entry.user }}</i></p>
+			<p> - Registered Twitter username: <i>{{ entry.user.twitter_id }}</i></p>
+			<p> - Registered Facebook account: unique ID: <i>{{ entry.user.facebook_id }}</i> Name of account: <i>{{ entry.user.given_name }} {{ entry.user.surname }}</i></p>
 			<p> - Origin: <i>{{ entry.origin }}</i> </p>
 			<p> - Destination: <i> {{ entry.destination }} </i></p>
 			<p> - Time sent: <i>{{ entry.time_sent }}</i> </p>

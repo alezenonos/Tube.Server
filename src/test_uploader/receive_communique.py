@@ -17,9 +17,10 @@ class get_raw(webapp.RequestHandler):
 #    def get(self):
         self.response.headers['Content-Type'] = "text/html"
         self.response.out.write('<html><body>')
-#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2999-07-31 08:25:10","delay":2,"user":"now test","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
-#        parsed_json = json.loads(json.dumps({"user":{"twitter":"testingtwitter2"}}, sort_keys=True, indent = 4))
-#        parsed_json = json.loads(json.dumps({"user":{"twitter":"dgsatwitter", "facebook":"26 27","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
+#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2987-07-31 08:25:10","delay":2,"facebook":"testfb","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"twitter":"alezenonos01","time_stamp":"2011-08-01 11:37:18"}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"user":{"twitter":"alezenonos01"}}, sort_keys=True, indent = 4))
+#        parsed_json = json.loads(json.dumps({"user":{"facebook":"testfb","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
         parsed_json = json.loads(self.request.body) 
 
         self.process(parsed_json)
@@ -38,7 +39,7 @@ class get_raw(webapp.RequestHandler):
                 
     def processing(self, header, parsed_json, is_check_in):
         "processing tasks common to both check-in and reports"
-        user_id = self.find_user_Id(parsed_json[header]['user'])
+        user_id = self.find_user_Id(parsed_json[header].get('twitter'), parsed_json[header].get('facebook'))
         entry = parsed_json[header]
         time_stamp = datetime.strptime(entry['time_stamp'], '%Y-%m-%d %H:%M:%S')
         self.response.out.write("<p> time_stamp: " + str(time_stamp) + "</p>")
@@ -76,10 +77,12 @@ class get_raw(webapp.RequestHandler):
         else:
             self.response.out.write("<p> User already exists in Database </p>")
                 
-    def find_user_Id(self, user):
+    def find_user_Id(self, twitter_id, facebook_id):
         "searches memcache for internal user id, otherwise searches database"
-        self.response.out.write("<p>user: " + user + "</p>" )
-        return user
+        self.response.out.write("<p>twitter: <i>" + str(twitter_id) + "</i> facebook: <i>" + str(facebook_id) + "</i></p>" )
+        user = self.is_user_not_in_database(twitter_id, facebook_id)
+        returning_key = user[0].key()
+        return returning_key
     
     def is_not_in_database(self, user_id, time_stamp, is_check_in):
         "searches database/memcache to check that the prospective entry has not already been entered"
