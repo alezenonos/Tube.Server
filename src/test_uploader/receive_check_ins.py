@@ -7,21 +7,18 @@ import logging
 
 def add_to_check_in_db(self, user_id, check_in):
     "retreives the stored information and places it in the database"
-    logging.info('add_to_db')
-    logging.info(check_in)
-    logging.info(check_in['modality'])
-    if check_in['modality'] == 'tube':
-        u=user_id
-        o=check_in['origin']
-        d=check_in['destination']
-        t=check_in['time_stamp']
+    if check_in.get('modality') == 'tube':
+        u = user_id
+        o = check_in.get('origin')
+        d = check_in.get('destination')
+        t = check_in.get('time_stamp')
 #        l=self.get_lines(check_in['line'])
-        rd=check_in['delay']
-        rc=check_in['crowd']
-        rh=check_in['happy']
-        longi=check_in['longitude']
-        lat=check_in['latitude']
-        c=check_in['message']
+        rd = check_in.get('delay')
+        rc = check_in.get('crowd')
+        rh = check_in.get('happy')
+        longi = check_in.get('longitude')
+        lat = check_in.get('latitude')
+        c = check_in.get('message')
         
         t = datetime.strptime(t, '%Y-%m-%d %H:%M:%S')
 #            This will need to be gotten rid of, but at the moment lines aren't sent so for other functionality this will have to do

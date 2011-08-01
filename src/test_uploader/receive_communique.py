@@ -1,6 +1,7 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
+from google.appengine.api import memcache
 from django.utils import simplejson as json
 from test_uploader.receive_check_ins import add_to_check_in_db
 from test_uploader.receive_reports import add_to_reports_db
@@ -17,8 +18,8 @@ class get_raw(webapp.RequestHandler):
 #    def get(self):
         self.response.headers['Content-Type'] = "text/html"
         self.response.out.write('<html><body>')
-#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2987-07-31 08:25:10","delay":2,"facebook":"testfb","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
-#        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"twitter":"alezenonos01","time_stamp":"2011-08-01 11:37:18"}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2987-07-31 08:25:11","delay":2,"twitter":"alezenonos01","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"facebook":"testfb","time_stamp":"2011-08-01 11:37:21"}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"user":{"twitter":"alezenonos01"}}, sort_keys=True, indent = 4))
 #        parsed_json = json.loads(json.dumps({"user":{"facebook":"testfb","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
         parsed_json = json.loads(self.request.body) 
@@ -41,7 +42,7 @@ class get_raw(webapp.RequestHandler):
         "processing tasks common to both check-in and reports"
         user_id = self.find_user_Id(parsed_json[header].get('twitter'), parsed_json[header].get('facebook'))
         entry = parsed_json[header]
-        time_stamp = datetime.strptime(entry['time_stamp'], '%Y-%m-%d %H:%M:%S')
+        time_stamp = datetime.strptime(entry.get('time_stamp'), '%Y-%m-%d %H:%M:%S')
         self.response.out.write("<p> time_stamp: " + str(time_stamp) + "</p>")
         
         if (self.is_not_in_database(user_id, time_stamp, is_check_in)):
@@ -55,23 +56,28 @@ class get_raw(webapp.RequestHandler):
             
     def process_user_request(self, header, user):
         "deals with either adding or updating user information"
-        
         twitter_id = user.get('twitter')
         facebook_id = user.get('facebook')
-        if ((twitter_id != None) and (facebook_id == None) and (self.is_user_not_in_database(twitter_id, None) == None)):
+        
+        if ((twitter_id is not None) and (facebook_id is None) and (self.is_user_not_in_database(twitter_id, None, True) is None)):
             add_to_user_db(self, user)
             self.response.out.write("<p> Twitter user <i>" + twitter_id + "</i> added successfully</p>")
-        elif ((twitter_id == None) and (facebook_id != None) and (self.is_user_not_in_database(None, facebook_id) == None)):
+            
+        elif ((twitter_id is None) and (facebook_id is not None) and (self.is_user_not_in_database(None, facebook_id, True) is None)):
             add_to_user_db(self, user)
             self.response.out.write("<p> Facebook user <i>" + facebook_id + "</i> added successfully</p>")
-        elif ((twitter_id != None) and (facebook_id != None)):
-            state = self.is_user_not_in_database(twitter_id, facebook_id)
-            if (state == None):
+            
+        elif ((twitter_id is not None) and (facebook_id is not None)):
+            state = self.is_user_not_in_database(twitter_id, facebook_id, True)
+            
+            if (state is None):
                 self.response.out.write("<p>Adding new user with Twitter and Facebook credentials to database<p>")
                 add_to_user_db(self, user)
+                
             elif (len(state) == 1):
                 self.response.out.write("<p> Twitter user: <i>" + twitter_id + "</i> and Facebook id: <i>" + facebook_id + "</i> credentials updated</p>")
                 update_user_in_db(self, state[0], user)
+                
             elif (len(state) == 2):
                 self.response.out.write("<p> User already exists in Database </p>")
         else:
@@ -80,7 +86,7 @@ class get_raw(webapp.RequestHandler):
     def find_user_Id(self, twitter_id, facebook_id):
         "searches memcache for internal user id, otherwise searches database"
         self.response.out.write("<p>twitter: <i>" + str(twitter_id) + "</i> facebook: <i>" + str(facebook_id) + "</i></p>" )
-        user = self.is_user_not_in_database(twitter_id, facebook_id)
+        user = self.is_user_not_in_database(twitter_id, facebook_id, False)
         returning_key = user[0].key()
         return returning_key
     
@@ -91,21 +97,44 @@ class get_raw(webapp.RequestHandler):
         else:
             return self.query_report_db(user_id, time_stamp)
         
-    def is_user_not_in_database(self, twitter_id, facebook_id):
+    def is_user_not_in_database(self, twitter_id, facebook_id, addition):
         "checks to see if the twitter login is not in the database"
         to_return = None
-        if (twitter_id != None):
-            t_entry = self.check_twitter_user(twitter_id)
+        if (twitter_id is not None):
+            if not addition:
+                t_entry = self.check_memcache(twitter_id, True)
+            else:
+                t_entry = self.check_twitter_user(twitter_id)
             if (len(t_entry) > 0):
                 to_return = [t_entry[0]]
-        if (facebook_id != None):
-            f_entry = self.check_facebook_user(facebook_id)
+                
+        if (facebook_id is not None):
+            f_entry = self.check_memcache(facebook_id, False)
             if (len(f_entry) > 0):
-                if (to_return == None):
+                if (to_return is None):
                     to_return = [f_entry[0]]
                 else:
                     to_return.append(f_entry[0])
+                    
         return to_return
+    
+    def check_memcache(self, user_id, twitter):
+        "checks memcache for user before consulting database"
+        cache = memcache.Client()
+        entry = cache.get(user_id)
+        
+        if entry is not None:
+            return entry
+        
+        else:
+            if twitter:
+                entry = self.check_twitter_user(user_id)
+            else:
+                entry = self.check_facebook_user(user_id)
+                
+            cache.add(user_id, entry, 0, 60)
+            self.response.out.write("<p><i>from database</i></p>")
+            return entry
         
     def check_twitter_user(self, twitter_id):
         query = db.GqlQuery(
