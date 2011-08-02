@@ -16,6 +16,9 @@ handlers:
 - url: /get/fares/*
   script: json_downloaders/fares.py
   
+- url: /get/distances/*
+  script: json_downloaders/display_distances_between_stations.py
+  
 - url: /get/tube-lines-status/*
   script: json_downloaders/tube_lines_status.py
   
