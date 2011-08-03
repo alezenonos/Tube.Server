@@ -28,6 +28,9 @@ handlers:
 - url: /upload/post/*
   script: test_uploader/receive_communique.py
   
+- url: /upload/csv/*
+  script: test_uploader/receive_logs.py
+  
 - url: /.*
   script: home.py
   
