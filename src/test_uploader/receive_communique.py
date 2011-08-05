@@ -11,6 +11,7 @@ from data.check_in_db import check_in_db_key
 from data.report_db import report_db_key
 from data.user_db import user_db_key
 from datetime import datetime
+import logging 
 
 class get_raw(webapp.RequestHandler):
     "gets the raw submitted data from the client"
@@ -18,10 +19,10 @@ class get_raw(webapp.RequestHandler):
 #    def get(self):
         self.response.headers['Content-Type'] = "text/html"
         self.response.out.write('<html><body>')
-#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"twitter":"alezenonos01","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"facebook":"testfb","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"facebook":"testfb","time_stamp":"2011-08-01 11:37:21"}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"user":{"twitter":"alezenonos01"}}, sort_keys=True, indent = 4))
-#        parsed_json = json.loads(json.dumps({"user":{"facebook":"testfb","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
+#        parsed_json = json.loads(json.dumps({"user":{"facebook":"599720869","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
         parsed_json = json.loads(self.request.body) 
 
         self.process(parsed_json)
@@ -87,7 +88,8 @@ class get_raw(webapp.RequestHandler):
         "searches memcache for internal user id, otherwise searches database"
         self.response.out.write("<p>twitter: <i>" + str(twitter_id) + "</i> facebook: <i>" + str(facebook_id) + "</i></p>" )
         user = self.is_user_not_in_database(twitter_id, facebook_id, False)
-        return user[0]
+        returning_key = user[0]
+        return returning_key
     
     def is_not_in_database(self, user_id, time_stamp, is_check_in):
         "searches database/memcache to check that the prospective entry has not already been entered"
@@ -122,7 +124,7 @@ class get_raw(webapp.RequestHandler):
         cache = memcache.Client()
         entry = cache.get(user_id)
         
-        if entry is not None:
+        if len(entry) > 0:
             return entry
         
         else:
@@ -130,6 +132,7 @@ class get_raw(webapp.RequestHandler):
                 entry = self.check_twitter_user(user_id)
             else:
                 entry = self.check_facebook_user(user_id)
+                logging.info('~~~check_memcache: ' + str(entry))
                 
             cache.add(user_id, entry, 0, 60)
             self.response.out.write("<p><i>from database</i></p>")
@@ -153,7 +156,9 @@ class get_raw(webapp.RequestHandler):
                             user_db_key('user_database'),
                             facebook_id
                             )
-        return query.fetch(1)
+        fetched = query.fetch(1) 
+        logging.info('~~~check_facebook_user: ' + facebook_id + ', 599720869')
+        return fetched
             
     def query_check_in_db(self, user_id, time_stamp):
         "commences the Check-In database search"
