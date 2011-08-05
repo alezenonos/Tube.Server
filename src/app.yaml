@@ -13,7 +13,7 @@ handlers:
 - url: /reports/*
   script: web_interface/print_reports.py
   
-- url: /get/fares/*
+- url: /get/fares.*
   script: json_downloaders/fares.py
   
 - url: /get/distances/*

@@ -17,10 +17,12 @@ class get_csv(webapp.RequestHandler):
         #for testing
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), "sent_testfile.csv"))
         test_csv = csv.reader(open(path))
-        
-#        received_csv = self.request.body
-        
         self.process(test_csv)
+        
+        #for actual eventual usage
+#        received_csv = self.request.body
+#        self.process(received_csv)
+        
         self.response.out.write('</body></html>')
         
     def process(self, received_csv):
@@ -37,18 +39,18 @@ class get_csv(webapp.RequestHandler):
                 activity_ts = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')
                 list_of_entities.append(
                                         log_db(
-                                               parent = log_db_key('log_database'),
-                                               user = user_key,
-                                               log_time_stamp = log_ts,
-                                               activity_time_stamp = activity_ts,
-                                               content = row[1]
+                                               parent=log_db_key('log_database'),
+                                               user=user_key,
+                                               log_time_stamp=log_ts,
+                                               activity_time_stamp=activity_ts,
+                                               content=row[1]
                                                )
                                         )
                 self.response.out.write("<p>Activity time-stamp: <i>" + str(activity_ts) + "</i></p>")
                 self.response.out.write("<p>Content of log: <i>" + str(row[1]) + "</i></p><hr>")
             db.put(list_of_entities)
         else:
-            self.response.out.write("<p>Error: User not found<p>")
+            self.response.out.write("<p><i>Error: User not found</i></p>")
             
             
     def get_user_key_from_database(self, user_id, account):
@@ -59,11 +61,11 @@ class get_csv(webapp.RequestHandler):
         else:
             returned_user = self.check_facebook_user(user_id)
         if len(returned_user) > 0:
-            return returned_user[0].key()
+            return returned_user[0]
     
     def check_twitter_user(self, twitter_id):
         query = db.GqlQuery(
-                            "SELECT * "
+                            "SELECT __key__ "
                             "FROM user_db "
                             "WHERE ANCESTOR IS :1 AND twitter_id = :2",
                             user_db_key('user_database'),
@@ -73,7 +75,7 @@ class get_csv(webapp.RequestHandler):
     
     def check_facebook_user(self, facebook_id):
         query = db.GqlQuery(
-                            "SELECT * "
+                            "SELECT __key__ "
                             "FROM user_db "
                             "WHERE ANCESTOR IS :1 AND facebook_id = :2",
                             user_db_key('user_database'),
@@ -84,7 +86,7 @@ class get_csv(webapp.RequestHandler):
         
 
 def main():
-    application = webapp.WSGIApplication([('/upload/csv', get_csv)],debug=True)
+    application = webapp.WSGIApplication([('/upload/csv', get_csv)], debug=True)
     run_wsgi_app(application)
 
 if __name__ == "__main__":

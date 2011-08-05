@@ -18,7 +18,7 @@ class get_raw(webapp.RequestHandler):
 #    def get(self):
         self.response.headers['Content-Type'] = "text/html"
         self.response.out.write('<html><body>')
-#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2987-07-31 08:25:11","delay":2,"twitter":"alezenonos01","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"twitter":"alezenonos01","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"facebook":"testfb","time_stamp":"2011-08-01 11:37:21"}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"user":{"twitter":"alezenonos01"}}, sort_keys=True, indent = 4))
 #        parsed_json = json.loads(json.dumps({"user":{"facebook":"testfb","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
@@ -87,8 +87,7 @@ class get_raw(webapp.RequestHandler):
         "searches memcache for internal user id, otherwise searches database"
         self.response.out.write("<p>twitter: <i>" + str(twitter_id) + "</i> facebook: <i>" + str(facebook_id) + "</i></p>" )
         user = self.is_user_not_in_database(twitter_id, facebook_id, False)
-        returning_key = user[0].key()
-        return returning_key
+        return user[0]
     
     def is_not_in_database(self, user_id, time_stamp, is_check_in):
         "searches database/memcache to check that the prospective entry has not already been entered"
@@ -138,7 +137,7 @@ class get_raw(webapp.RequestHandler):
         
     def check_twitter_user(self, twitter_id):
         query = db.GqlQuery(
-                            "SELECT * "
+                            "SELECT __key__ "
                             "FROM user_db "
                             "WHERE ANCESTOR IS :1 AND twitter_id = :2",
                             user_db_key('user_database'),
@@ -148,7 +147,7 @@ class get_raw(webapp.RequestHandler):
     
     def check_facebook_user(self, facebook_id):
         query = db.GqlQuery(
-                            "SELECT * "
+                            "SELECT __key__ "
                             "FROM user_db "
                             "WHERE ANCESTOR IS :1 AND facebook_id = :2",
                             user_db_key('user_database'),
@@ -158,7 +157,7 @@ class get_raw(webapp.RequestHandler):
             
     def query_check_in_db(self, user_id, time_stamp):
         "commences the Check-In database search"
-        query = db.GqlQuery("SELECT * "
+        query = db.GqlQuery("SELECT __key__ "
                             "FROM check_in_db "
                             "WHERE ANCESTOR IS :1 AND time_sent = :2 AND user = :3",
                             check_in_db_key('check_in_database'),
@@ -173,7 +172,7 @@ class get_raw(webapp.RequestHandler):
         
     def query_report_db(self, user_id, time_stamp):
         "commences the Report database search"
-        query = db.GqlQuery("SELECT * "
+        query = db.GqlQuery("SELECT __key__ "
                             "FROM report_db "
                             "WHERE ANCESTOR IS :1 AND time_sent = :2 AND user = :3",
                             report_db_key('report_database'),

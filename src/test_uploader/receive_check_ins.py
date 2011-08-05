@@ -3,7 +3,6 @@ from data.check_in_db import check_in_db_key
 from data.strings import tube_line_arrays
 from data.strings import tube_lines
 from datetime import datetime
-import logging
 
 def add_to_check_in_db(self, user_id, check_in):
     "retreives the stored information and places it in the database"
