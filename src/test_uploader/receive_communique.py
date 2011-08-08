@@ -21,7 +21,7 @@ class get_raw(webapp.RequestHandler):
         self.response.out.write('<html><body>')
 #        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"facebook":"testfb","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"facebook":"testfb","time_stamp":"2011-08-01 11:37:21"}}, sort_keys=True, indent=4))
-#        parsed_json = json.loads(json.dumps({"user":{"twitter":"alezenonos01"}}, sort_keys=True, indent = 4))
+#        parsed_json = json.loads(json.dumps({"user":{"twitter":"A_Libuelles"}}, sort_keys=True, indent = 4))
 #        parsed_json = json.loads(json.dumps({"user":{"facebook":"599720869","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
         parsed_json = json.loads(self.request.body) 
 
@@ -124,7 +124,7 @@ class get_raw(webapp.RequestHandler):
         cache = memcache.Client()
         entry = cache.get(user_id)
         
-        if len(entry) > 0:
+        if entry is not None:
             return entry
         
         else:
