@@ -1,26 +1,27 @@
+from data.log_db import log_db, log_db_key
 from data.user_db import user_db_key
-from data.log_db import log_db
-from data.log_db import log_db_key
+from datetime import datetime
 from google.appengine.ext import db, webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from datetime import datetime
 import csv
+import logging
 import os
 
 class get_csv(webapp.RequestHandler):
     "gets csv logs from client"
-    def get(self):
-#    def post(self):
+#    def get(self):
+    def post(self):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write('<html><body>')
         
         #for testing
-        path = os.path.abspath(os.path.join(os.path.dirname(__file__), "sent_testfile.csv"))
-        test_csv = csv.reader(open(path))
-        self.process(test_csv)
+#        path = os.path.abspath(os.path.join(os.path.dirname(__file__), "sent_testfile.csv"))
+#        test_csv = csv.reader(open(path))
+#        self.process(test_csv)
         
-        #for actual eventual usage
-#        received_csv = self.request.body
+#        for actual eventual usage
+        received_csv = self.request.body
+        logging.info(received_csv)
 #        self.process(received_csv)
         
         self.response.out.write('</body></html>')
