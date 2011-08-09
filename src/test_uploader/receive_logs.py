@@ -21,8 +21,8 @@ class get_csv(webapp.RequestHandler):
         
 #        for actual eventual usage
         received_csv = self.request.body
-        logging.info(received_csv)
-#        self.process(received_csv)
+#        logging.info(received_csv)
+        self.process(csv.reader(received_csv.split(os.linesep)))
         
         self.response.out.write('</body></html>')
         
@@ -33,22 +33,34 @@ class get_csv(webapp.RequestHandler):
         metadata = received_csv.next()
         user_key = self.get_user_key_from_database(metadata[1], metadata[0])
         log_ts = datetime.strptime(metadata[2], '%Y-%m-%d %H:%M:%S')
+        logging.info('user_key: ' + str(user_key))
+        logging.info('log_ts: ' + str(log_ts))
         if user_key is not None:
             self.response.out.write("<p>User Key: <i>" + str(user_key) + "</i></p>")
             self.response.out.write("<p>Log time-stamp: <i>" + str(log_ts) + "</i></p>")
-            for row in received_csv:
-                activity_ts = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')
-                list_of_entities.append(
-                                        log_db(
-                                               parent=log_db_key('log_database'),
-                                               user=user_key,
-                                               log_time_stamp=log_ts,
-                                               activity_time_stamp=activity_ts,
-                                               content=row[1]
-                                               )
-                                        )
-                self.response.out.write("<p>Activity time-stamp: <i>" + str(activity_ts) + "</i></p>")
-                self.response.out.write("<p>Content of log: <i>" + str(row[1]) + "</i></p><hr>")
+            row = received_csv.next()
+            while (True):
+                row = received_csv.next()
+                if (len(row) == 3):
+                    logging.info(row)
+                    activity_ts = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')
+                    logging.info('activity_ts: ' + str(activity_ts))
+                    logging.info('tag: ' + str(row[1]))
+                    logging.info('content: ' + str(row[2]))
+                    list_of_entities.append(
+                                            log_db(
+                                                   parent=log_db_key('log_database'),
+                                                   user=user_key,
+                                                   log_time_stamp=log_ts,
+                                                   activity_time_stamp=activity_ts,
+                                                   tag = row[1],
+                                                   content=row[2]
+                                                   )
+                                            )
+                    self.response.out.write("<p>Activity time-stamp: <i>" + str(activity_ts) + "</i></p>")
+                    self.response.out.write("<p>Content of log: <i>" + str(row[1]) + "</i></p><hr>")
+                else:
+                    break
             db.put(list_of_entities)
         else:
             self.response.out.write("<p><i>Error: User not found</i></p>")
@@ -92,3 +104,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

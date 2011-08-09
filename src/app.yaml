@@ -31,6 +31,9 @@ handlers:
 - url: /upload/csv/*
   script: test_uploader/receive_logs.py
   
+- url: /delete/logs/*
+  script: data/delete.py
+  
 - url: /.*
   script: home.py
   
