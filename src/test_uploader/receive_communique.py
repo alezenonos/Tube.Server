@@ -19,10 +19,11 @@ class get_raw(webapp.RequestHandler):
 #    def get(self):
         self.response.headers['Content-Type'] = "text/html"
         self.response.out.write('<html><body>')
-#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"facebook":"testfb","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
+#        parsed_json = json.loads(json.dumps({"check_in":{"time_stamp":"2984-07-31 08:25:11","delay":2,"twitter":"neal_lathia","message":"","crowd":2,"latitude":"51.5315581","longitude":"-0.13440335","origin":"Euston","modality":"tube","destination":"Liverpool Street","happy":2}}, sort_keys=True, indent=4))
 #        parsed_json = json.loads(json.dumps({"report":{"line":"Circle Line","categories":["Line Disruptions" , "Minor Delays"],"comment":" ","stations":["Barbican"],"facebook":"testfb","time_stamp":"2011-08-01 11:37:21"}}, sort_keys=True, indent=4))
-#        parsed_json = json.loads(json.dumps({"user":{"twitter":"A_Libuelles"}}, sort_keys=True, indent = 4))
+#        parsed_json = json.loads(json.dumps({"user":{"twitter":"neal_lathia"}}, sort_keys=True, indent = 4))
 #        parsed_json = json.loads(json.dumps({"user":{"facebook":"599720869","given_name":"Bob","surname":"Bloggs","gender":"male","email":"joe.bloggs@internet.com"}}))
+#        logging.info(self.request.body)
         parsed_json = json.loads(self.request.body) 
 
         self.process(parsed_json)
@@ -88,6 +89,7 @@ class get_raw(webapp.RequestHandler):
         "searches memcache for internal user id, otherwise searches database"
         self.response.out.write("<p>twitter: <i>" + str(twitter_id) + "</i> facebook: <i>" + str(facebook_id) + "</i></p>" )
         user = self.is_user_not_in_database(twitter_id, facebook_id, False)
+        logging.info(user)
         returning_key = user[0]
         return returning_key
     
@@ -100,10 +102,13 @@ class get_raw(webapp.RequestHandler):
         
     def is_user_not_in_database(self, twitter_id, facebook_id, addition):
         "checks to see if the twitter login is not in the database"
+        logging.info(twitter_id)
         to_return = None
         if (twitter_id is not None):
             if not addition:
+                logging.info("is not addition")
                 t_entry = self.check_memcache(twitter_id, True)
+                logging.info('t_entry: ' + str(t_entry))
             else:
                 t_entry = self.check_twitter_user(twitter_id)
             if (len(t_entry) > 0):
@@ -121,14 +126,19 @@ class get_raw(webapp.RequestHandler):
     
     def check_memcache(self, user_id, twitter):
         "checks memcache for user before consulting database"
+        logging.info('twitter: ' + str(twitter))
+        logging.info('user_id: ' + str(user_id))
         cache = memcache.Client()
         entry = cache.get(user_id)
+        logging.info('entry: ' + str(entry))
         
         if entry is not None:
-            return entry
+            if len(entry) > 0:
+                return entry
         
         else:
             if twitter:
+                logging.info('checking twitter user from database')
                 entry = self.check_twitter_user(user_id)
             else:
                 entry = self.check_facebook_user(user_id)
@@ -139,6 +149,7 @@ class get_raw(webapp.RequestHandler):
             return entry
         
     def check_twitter_user(self, twitter_id):
+        logging.info('twitter_id: ' + str(twitter_id))
         query = db.GqlQuery(
                             "SELECT __key__ "
                             "FROM user_db "
