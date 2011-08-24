@@ -14,7 +14,6 @@ class check_in_db(db.Model):
     rating_happiness = db.IntegerProperty(required=True)
     longitude = db.StringProperty()
     latitude = db.StringProperty()
-    comment = db.TextProperty(required=False)
     
     
 def check_in_db_key(check_in_name=None):

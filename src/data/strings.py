@@ -1,19 +1,5 @@
 
-tube_lines = [
-	"Waterloo and City Line",
-	"Metropolitan Line",
-	"Docklands Light Railway",
-	"Bakerloo Line",
-	"Circle Line",
-	"Overground",
-	"Northern Line",
-	"Hammersmith and City Line",
-	"Jubilee Line",
-	"Victoria Line",
-	"District Line",
-	"Central Line",
-	"Piccadilly Line"
-]
+
 
 victoria_line = [
 	"Blackhorse Road",
@@ -958,6 +944,22 @@ zone8_stations = [
 zone9_stations = [
 	"Amersham"
 	"Chesham"
+]
+
+tube_lines = [
+	"Bakerloo Line",
+	"Central Line",
+	"Circle Line",
+	"District Line",
+	"Hammersmith and City Line",
+	"Jubilee Line",
+	"Metropolitan Line",
+	"Northern Line",
+	"Piccadilly Line",
+	"Victoria Line",
+	"Waterloo and City Line",
+	"Docklands Light Railway",
+	"Overground",
 ]
 
 tube_line_arrays = [
