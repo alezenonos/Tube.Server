@@ -7,11 +7,11 @@ class report_db(db.Model):
     line = db.StringProperty()
     station_1 = db.StringProperty()
     station_2 = db.StringProperty()
+    direction = db.StringProperty()
     satisfaction_rating = db.IntegerProperty(required=True)
     crowd_rating = db.IntegerProperty()
     delay_rating = db.IntegerProperty()
-    direction = db.StringProperty()
-    category = db.StringListProperty(required=True)
+    category = db.StringListProperty()
     other = db.StringProperty()
     
 def report_db_key(report_db_name=None):
