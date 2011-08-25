@@ -1,4 +1,5 @@
 from data.report_db import report_db_key, report_db
+from data.user_db import user_db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
