@@ -2,7 +2,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 import os
 
-version_number = 2
+version_number = 3
 
 class fares_downloader(webapp.RequestHandler):
     "accessed by the client to download the current fares"
